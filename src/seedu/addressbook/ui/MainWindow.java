@@ -1,13 +1,19 @@
 package seedu.addressbook.ui;
 
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import seedu.addressbook.commands.ExitCommand;
 import seedu.addressbook.logic.Logic;
 import seedu.addressbook.commands.CommandResult;
+import seedu.addressbook.data.person.Person;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 
 import java.util.List;
@@ -39,6 +45,27 @@ public class MainWindow {
 
     @FXML
     private TextField commandInput;
+    
+    @FXML
+    private TableView<ReadOnlyPerson> personTable;
+    
+    @FXML
+    private TableColumn<ReadOnlyPerson, String> noColumn;
+    
+    @FXML
+    private TableColumn<ReadOnlyPerson, String> nameColumn;
+    
+    @FXML
+    private TableColumn<ReadOnlyPerson, String> phoneColumn;
+    
+    @FXML
+    private TableColumn<ReadOnlyPerson, String> emailColumn;
+    
+    @FXML
+    private TableColumn<ReadOnlyPerson, String> addressColumn;
+    
+    @FXML
+    private TableColumn<ReadOnlyPerson, String> tagColumn;
 
 
     @FXML
@@ -85,11 +112,25 @@ public class MainWindow {
             display(resultPersons.get());
         }
         display(result.feedbackToUser);
+        if (result.getRelevantPersons().isPresent()) {
+            ObservableList<ReadOnlyPerson> persons = FXCollections.observableArrayList(result.getRelevantPersons().get());
+            personTable.setItems(persons);
+        }
     }
 
     public void displayWelcomeMessage(String version, String storageFilePath) {
         String storageFileInfo = String.format(MESSAGE_USING_STORAGE_FILE, storageFilePath);
         display(MESSAGE_WELCOME, version, MESSAGE_PROGRAM_LAUNCH_ARGS_USAGE, storageFileInfo);
+    }
+    
+    public void initialize() {
+        // Initialize the person table with the two columns.
+        noColumn.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(personTable.getItems().indexOf(cellData.getValue()) + 1)));
+        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName().fullName));
+        phoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone().value));
+        emailColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail().value));
+        addressColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().value));
+        tagColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTags().toString()));
     }
 
     /**
