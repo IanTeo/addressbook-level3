@@ -124,13 +124,21 @@ public class MainWindow {
     }
     
     public void initialize() {
-        // Initialize the person table with the two columns.
+        // Initialize the person table with the six columns.
         noColumn.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(personTable.getItems().indexOf(cellData.getValue()) + 1)));
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName().fullName));
         phoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone().value));
         emailColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail().value));
         addressColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress().value));
         tagColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTags().toString()));
+        
+        // Make the six columns not sortable
+        noColumn.setSortable(false);
+        nameColumn.setSortable(false);
+        phoneColumn.setSortable(false);
+        emailColumn.setSortable(false);
+        addressColumn.setSortable(false);
+        tagColumn.setSortable(false);
     }
 
     /**
